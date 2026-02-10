@@ -43,7 +43,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: 🚀 Deploy
-        run: ./gradlew publish
+        run: ./gradlew publish --continue
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GRAVEMC_REPO_USER: ${{ secrets.GRAVEMC_REPO_USER }}
