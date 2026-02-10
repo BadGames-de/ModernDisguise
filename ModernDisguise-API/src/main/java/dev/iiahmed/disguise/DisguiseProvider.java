@@ -361,6 +361,10 @@ public abstract class DisguiseProvider {
         return null;
     }
 
+    /**
+     * Return the player nick info list.
+     * @return the list.
+     */
     public Collection<PlayerInfo> getPlayerInfo() {
         return Collections.unmodifiableCollection(playerInfo.values());
     }
