@@ -48,6 +48,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GRAVEMC_REPO_USER: ${{ secrets.GRAVEMC_REPO_USER }}
           GRAVEMC_REPO_PASSWORD: ${{ secrets.GRAVEMC_REPO_PASSWORD }}
+          REPO_USER: ${{ secrets.REPO_USER }}
+          REPO_PASSWORD: ${{ secrets.REPO_PASSWORD }}
 
       - name: 🏗️ Build ModernExample
         run: ./gradlew :ModernExample:shadowJar
