@@ -30,7 +30,7 @@ public final class DisguiseUtil {
     private static final String HANDLER_NAME = "ModernDisguise";
     public static final String PREFIX = "net.minecraft.server." + (Version.isBelow(17) ? "v" + Version.NMS + "." : "");
 
-    public static final Field PROFILE_NAME;
+    public static final Field PROFILE_NAME, PROFILE_ID;
     public static final boolean PRIMARY, INJECTION;
 
     public static FieldAccessor<?> CONNECTION;
@@ -53,7 +53,9 @@ public final class DisguiseUtil {
             GET_PROFILE = craftPlayer.getMethod("getProfile");
             GET_HANDLE = craftPlayer.getMethod("getHandle");
             PROFILE_NAME = GameProfile.class.getDeclaredField("name");
+            PROFILE_ID = GameProfile.class.getDeclaredField("id");
             PROFILE_NAME.setAccessible(true);
+            PROFILE_ID.setAccessible(true);
             final Field listFiled = Bukkit.getServer().getClass().getDeclaredField("playerList");
             listFiled.setAccessible(true);
             final Class<?> playerListClass = Class.forName((obf ?

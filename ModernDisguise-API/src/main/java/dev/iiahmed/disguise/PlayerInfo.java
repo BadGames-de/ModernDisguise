@@ -2,23 +2,33 @@ package dev.iiahmed.disguise;
 
 import org.bukkit.entity.EntityType;
 
+import java.util.UUID;
+
 public final class PlayerInfo {
 
     private final String name, nickname;
+    private final UUID uuid, nickUUID;
     private final Skin skin;
     private final Entity entity;
 
     PlayerInfo(
             final String name,
             final String nickname,
+            final UUID uuid,
+            final UUID nickUUID,
             final Skin skin,
             final Entity entity
     ) {
         if (name == null) {
             throw new IllegalArgumentException("Input real name can't be null.");
         }
+        if (uuid == null) {
+            throw new IllegalArgumentException("Input real uuid can't be null.");
+        }
         this.name = name;
         this.nickname = nickname;
+        this.uuid = uuid;
+        this.nickUUID = nickUUID;
         this.skin = skin;
         this.entity = entity;
     }
@@ -37,6 +47,17 @@ public final class PlayerInfo {
     public String getNickname() {
         return nickname == null ? name : nickname;
     }
+
+    /**
+     * @return the real uuid of the disguised Player
+     */
+    public UUID getUUID() { return uuid; }
+
+    /**
+     * @return the fake uuid of the disguised Player, will return
+     * the real one if there's no fake
+     */
+    public UUID getNickUUID() { return nickUUID == null ? uuid : nickUUID; }
 
     /**
      * @return the skin info of the player
@@ -78,6 +99,13 @@ public final class PlayerInfo {
      */
     public boolean hasEntity() {
         return entity != null && entity.isValid();
+    }
+
+    /**
+     * @return a {@link Boolean} that indicates whether the disguise had changed the player's uuid
+     */
+    public boolean hasUUID() {
+        return nickUUID != null && !nickUUID.equals(uuid);
     }
 
 }

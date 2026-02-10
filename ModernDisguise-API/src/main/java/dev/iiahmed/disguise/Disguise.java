@@ -10,11 +10,13 @@ import java.util.function.Function;
 public final class Disguise {
 
     private final String name;
+    private final UUID uuid;
     private final Skin skin;
     private final Entity entity;
 
-    private Disguise(final String name, final Skin skin, final Entity entity) {
+    private Disguise(final String name, final UUID uuid, final Skin skin, final Entity entity) {
         this.name = name;
+        this.uuid = uuid;
         this.skin = skin;
         this.entity = entity;
     }
@@ -52,6 +54,20 @@ public final class Disguise {
      */
     public boolean hasSkin() {
         return skin != null && skin.isValid();
+    }
+
+    /**
+     * @return a {@link Boolean} that indicates whether the disguise will change the player's gameprofile uuid
+     */
+    public boolean hasUUID() {
+        return uuid != null;
+    }
+
+    /**
+     * @return the name that the disguised player's uuid going to be changed for
+     */
+    public UUID getUUID() {
+        return uuid;
     }
 
     /**
@@ -94,6 +110,7 @@ public final class Disguise {
     public static class Builder {
 
         private String name;
+        private UUID uuid;
         private Skin skin;
         private Entity entity;
 
@@ -109,6 +126,11 @@ public final class Disguise {
          */
         public Builder setName(final String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder setUUID(final UUID uuid) {
+            this.uuid = uuid;
             return this;
         }
 
@@ -205,7 +227,7 @@ public final class Disguise {
          * @return a new instance of {@link Disguise} with the collected info
          */
         public Disguise build() {
-            return new Disguise(name, skin, entity);
+            return new Disguise(name, uuid, skin, entity);
         }
 
     }

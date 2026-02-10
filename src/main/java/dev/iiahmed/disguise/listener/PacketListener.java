@@ -147,9 +147,9 @@ public final class PacketListener extends ChannelDuplexHandler {
         if (PACKET_NAME.equals(name)) {
             this.handleSpawnPacket(context, packet, packet, promise);
             return;
-        } else if (PLAYER_INFO_PACKET_NAME.equals(name) && PLAYER_INFO_SUPPORTED) {
+        /*} else if (PLAYER_INFO_PACKET_NAME.equals(name) && PLAYER_INFO_SUPPORTED) {
             this.handlePlayerInfoPacket(context, packet, promise);
-            return;
+            return;*/
         } else if (BUNDLE_PACKET_NAME.equals(name)) {
             assert PACKET_LIST != null;
             final Iterable<?> iterable = (Iterable<?>) PACKET_LIST.get(packet);

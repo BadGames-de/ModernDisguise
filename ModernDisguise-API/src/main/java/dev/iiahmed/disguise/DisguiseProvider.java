@@ -10,9 +10,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -151,15 +149,31 @@ public abstract class DisguiseProvider {
             return DisguiseResponse.FAIL_ENTITY_NOT_SUPPORTED;
         }
 
+        UUID realUUID = player.getUniqueId();
+        UUID nickUUID = realUUID;
+
         String realName = player.getName();
         String nickname = realName;
+
         final GameProfile profile = DisguiseUtil.getProfile(player);
         if (!player.isOnline() || profile == null) {
             return DisguiseResponse.FAIL_PROFILE_NOT_FOUND;
         }
 
+        if (disguise.hasUUID()) {
+            nickUUID = disguise.getUUID();
+            //getPlugin().getLogger().info("Setting UUID!");
+            try {
+                DisguiseUtil.PROFILE_ID.set(profile, nickUUID);
+            } catch (final IllegalAccessException e) {
+                // shouldn't happen
+                return DisguiseResponse.FAIL_UUID_CHANGE_EXCEPTION;
+            }
+        }
+
         if (disguise.hasName() && !disguise.getName().equals(player.getName())) {
             final String name = disguise.getName();
+            //getPlugin().getLogger().info("Setting Name!");
 
             if (name.length() > nameLength) {
                 return DisguiseResponse.FAIL_NAME_TOO_LONG;
@@ -188,6 +202,7 @@ public abstract class DisguiseProvider {
 
         Skin realSkin = null;
         if (disguise.hasSkin()) {
+            //getPlugin().getLogger().info("Setting Skin!");
             final Optional<Property> optional = profile.getProperties().get("textures").stream().findFirst();
             if (optional.isPresent()) {
                 realSkin = DisguiseUtil.getSkin(optional.get());
@@ -218,12 +233,14 @@ public abstract class DisguiseProvider {
                 new PlayerInfo(
                         realName,
                         nickname,
+                        realUUID,
+                        nickUUID,
                         realSkin,
                         entity
                 )
         );
 
-        if (disguise.hasName() || disguise.hasSkin()) {
+        if (disguise.hasName() || disguise.hasSkin() || disguise.hasUUID()) {
             final boolean flying = player.isFlying();
             final int foodLevel = player.getFoodLevel();
             final float saturation = player.getSaturation();
@@ -271,7 +288,18 @@ public abstract class DisguiseProvider {
         }
 
         final PlayerInfo info = this.playerInfo.get(player.getUniqueId());
+
+        if (info.hasUUID()) {
+            //getPlugin().getLogger().info("Setting UUID!");
+            try {
+                DisguiseUtil.PROFILE_ID.set(profile, info.getUUID());
+            } catch (final IllegalAccessException e) {
+                return UndisguiseResponse.FAIL_NAME_CHANGE_EXCEPTION;
+            }
+        }
+
         if (info.hasName()) {
+            //getPlugin().getLogger().info("Setting Name!");
             try {
                 DisguiseUtil.PROFILE_NAME.set(profile, info.getName());
                 DisguiseUtil.unregister(info.getNickname());
@@ -281,6 +309,7 @@ public abstract class DisguiseProvider {
         }
 
         if (info.hasSkin()) {
+            //getPlugin().getLogger().info("Setting Skin!");
             final Skin skin = info.getSkin();
             profile.getProperties().removeAll("textures");
             profile.getProperties().put("textures", new Property("textures", skin.getTextures(), skin.getSignature()));
@@ -318,7 +347,22 @@ public abstract class DisguiseProvider {
         if (this.playerInfo.containsKey(player.getUniqueId())) {
             return this.playerInfo.get(player.getUniqueId());
         }
-        return new PlayerInfo(player.getName(), null, null, null);
+        return new PlayerInfo(player.getName(), null,  player.getUniqueId(), null, null, null);
+    }
+
+    /**
+     * @param player the {@link Player} you're grabbing info about
+     * @return the known info about a {@link Player}
+     */
+    public PlayerInfo getInfo(@NotNull final UUID player) {
+        if (this.playerInfo.containsKey(player)) {
+            return this.playerInfo.get(player);
+        }
+        return null;
+    }
+
+    public Collection<PlayerInfo> getPlayerInfo() {
+        return Collections.unmodifiableCollection(playerInfo.values());
     }
 
     /**

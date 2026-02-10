@@ -40,6 +40,11 @@ public enum DisguiseResponse {
      */
     FAIL_NAME_CHANGE_EXCEPTION,
     /**
+     * Returns when reflections fail to change the player's GameProfile's id
+     * which most likely is NOT going to happen
+     */
+    FAIL_UUID_CHANGE_EXCEPTION,
+    /**
      * Returns when the provided nickname's length is longer than 16 characters.
      */
     FAIL_NAME_TOO_LONG,

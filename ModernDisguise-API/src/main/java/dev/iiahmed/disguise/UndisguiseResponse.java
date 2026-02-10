@@ -20,6 +20,11 @@ public enum UndisguiseResponse {
      */
     FAIL_NAME_CHANGE_EXCEPTION,
     /**
+     * Returns when reflections fail to change the player's GameProfile's id
+     * THIS WILL NEVER HAPPEN IN UNDISGUISE EVER
+     */
+    FAIL_UUID_CHANGE_EXCEPTION,
+    /**
      * Returns when the undisguise request succeeds
      */
     SUCCESS
