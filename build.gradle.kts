@@ -17,6 +17,7 @@ allprojects {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url = uri("https://repo.codemc.org/repository/nms/")
@@ -146,6 +147,14 @@ publishing {
             credentials {
                 username = findProperty("gravemc.repo.user") as String? ?: System.getenv("GRAVEMC_REPO_USER")
                 password = findProperty("gravemc.repo.password") as String? ?: System.getenv("GRAVEMC_REPO_PASSWORD")
+            }
+        }
+        maven {
+            name = "badgamesReleases"
+            url = uri("https://repo.badgames.de/releases")
+            credentials {
+                username = findProperty("repoUser") as String? ?: System.getenv("REPO_USER")
+                password = findProperty("repoPassword") as String? ?: System.getenv("REPO_PASSWORD")
             }
         }
     }

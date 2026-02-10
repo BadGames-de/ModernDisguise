@@ -43,6 +43,7 @@ minecraftVersions.forEach { version ->
 
 pluginManagement {
         repositories {
+                mavenLocal()
                 mavenCentral()
                 gradlePluginPortal()
                 maven {
